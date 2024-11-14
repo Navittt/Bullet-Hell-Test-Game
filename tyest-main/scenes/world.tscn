@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://ce1gcnd44r2vh"]
+
+[ext_resource type="PackedScene" uid="uid://dmmnf7mbcyjx3" path="res://scenes/player.tscn" id="1_ljht4"]
+[ext_resource type="Script" path="res://scripts/world.gd" id="1_wdhau"]
+[ext_resource type="PackedScene" uid="uid://creglxctmrhf" path="res://scenes/enemy.tscn" id="3_oy4pr"]
+
+[node name="world" type="Node2D"]
+script = ExtResource("1_wdhau")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(-67, 0)
+zoom = Vector2(0.83, 0.83)
+
+[node name="player" parent="." instance=ExtResource("1_ljht4")]
+position = Vector2(-185, 0)
+
+[node name="enemy" parent="." instance=ExtResource("3_oy4pr")]
+position = Vector2(185, 7)

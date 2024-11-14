@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://l4g4573j0hb5"]
+
+[ext_resource type="Texture2D" uid="uid://btc8bqga4nf30" path="res://assets/red box 16.png" id="1_ca48w"]
+[ext_resource type="Script" path="res://scripts/melee.gd" id="1_ejfyl"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_13pkm"]
+size = Vector2(12, 12)
+
+[node name="Area2D" type="Area2D"]
+disable_mode = 2
+script = ExtResource("1_ejfyl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_13pkm")
+
+[node name="melee" type="Sprite2D" parent="."]
+scale = Vector2(0.675, 0.675)
+texture = ExtResource("1_ca48w")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

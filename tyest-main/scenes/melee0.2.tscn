@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://dnyh0yj12muhh"]
+
+[ext_resource type="PackedScene" uid="uid://l4g4573j0hb5" path="res://scenes/melee.tscn" id="1_2tw5s"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n4lrf"]
+size = Vector2(15.8025, 15.8025)
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(57, 0)
+
+[node name="wepon" type="Node2D" parent="Marker2D"]
+position = Vector2(6, 0)
+scale = Vector2(3, 3)
+
+[node name="melee" parent="Marker2D/wepon" instance=ExtResource("1_2tw5s")]
+
+[node name="wepon hitbox" type="Area2D" parent="Marker2D/wepon/melee"]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Marker2D/wepon/melee/wepon hitbox"]
+position = Vector2(-2.35476e-08, 0)
+shape = SubResource("RectangleShape2D_n4lrf")

@@ -1,0 +1,141 @@
+[gd_scene load_steps=12 format=3 uid="uid://dmmnf7mbcyjx3"]
+
+[ext_resource type="Texture2D" uid="uid://brrhvq4g6o7t4" path="res://assets/white box 16.png" id="1_7tt4e"]
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_dglhv"]
+[ext_resource type="PackedScene" uid="uid://dnyh0yj12muhh" path="res://scenes/melee0.2.tscn" id="3_lub0a"]
+[ext_resource type="AudioStream" uid="uid://ba22egtiol0xa" path="res://assets/inception-bwong-copy.mp3" id="4_6dkqd"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mqv8m"]
+size = Vector2(16, 16)
+
+[sub_resource type="Animation" id="Animation_0v81y"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node2D/Marker2D/wepon/melee:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node2D/Marker2D/wepon/melee:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_i2ido"]
+resource_name = "attack"
+length = 0.2
+step = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node2D/Marker2D/wepon/melee:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node2D/Marker2D/wepon/melee:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(7, 0), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qlst7"]
+_data = {
+"RESET": SubResource("Animation_0v81y"),
+"attack": SubResource("Animation_i2ido")
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x0kcs"]
+bg_color = Color(0.099986, 0.099986, 0.099986, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qnpgn"]
+bg_color = Color(0.705889, 0.00948746, 0.15146, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1jl2v"]
+size = Vector2(54, 56)
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_dglhv")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(3, 3)
+texture = ExtResource("1_7tt4e")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(3, 3)
+shape = SubResource("RectangleShape2D_mqv8m")
+
+[node name="dash time" type="Timer" parent="."]
+wait_time = 0.2
+
+[node name="dash wait" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="shoot wait" type="Timer" parent="."]
+wait_time = 0.2
+
+[node name="Node2D" parent="." instance=ExtResource("3_lub0a")]
+
+[node name="CollisionShape2D" parent="Node2D/Marker2D/wepon/melee/wepon hitbox" index="0"]
+position = Vector2(3.8147e-06, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_qlst7")
+}
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+offset_left = -35.0
+offset_top = -57.0
+offset_right = 35.0
+offset_bottom = -30.0
+theme_override_styles/background = SubResource("StyleBoxFlat_x0kcs")
+theme_override_styles/fill = SubResource("StyleBoxFlat_qnpgn")
+max_value = 10.0
+value = 5.0
+
+[node name="Hurtbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, 1)
+shape = SubResource("RectangleShape2D_1jl2v")
+
+[node name="deathtimer" type="Timer" parent="."]
+wait_time = 2.0
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_6dkqd")
+volume_db = 4.698
+
+[connection signal="timeout" from="dash time" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="dash wait" to="." method="_on_dash_wait_timeout"]
+[connection signal="timeout" from="shoot wait" to="." method="_on_shoot_wait_timeout"]
+[connection signal="body_entered" from="Hurtbox" to="." method="_on_hurtbox_body_entered"]
+[connection signal="timeout" from="deathtimer" to="." method="_on_deathtimer_timeout"]
+
+[editable path="Node2D"]

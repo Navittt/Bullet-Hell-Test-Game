@@ -13,8 +13,8 @@ var can_melee = true
 var health = 10
 var timer_started = false
 var can_move = true
-
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+
 @onready var timer = $"dash time"
 @onready var dash_wait = $"dash wait"
 @onready var shoot_wait = $"shoot wait"
@@ -24,8 +24,8 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 @onready var player: CharacterBody2D = $"."
 @onready var BWONG: AudioStreamPlayer = $AudioStreamPlayer
 @onready var can_be_hit: Timer = $can_be_hit
-
-signal is_attackingg
+@onready var meleee: Area2D = $Node2D/Marker2D/wepon/melee
+@onready var meleetimer: Timer = $meleetimer
 
 func _ready():
 	health_bar.value = health
@@ -66,8 +66,9 @@ func _physics_process(delta):
 	$Node2D.look_at(get_global_mouse_position())
 	
 	if Input.is_action_just_pressed("melee") and can_melee:
-		emit_signal("is_attackingg")
-		print("sent")
+		meleee.can_attack = true
+		can_melee = false
+		meleetimer.start()
 		melee()
 	
 	
@@ -82,7 +83,6 @@ func shoot():
 	
 func melee():
 	animation.play("attack")
-	
 	
 func _on_timer_timeout():
 	dashing = false
@@ -103,3 +103,8 @@ func _on_hurtbox_body_entered(body: Node2D) -> void:
 
 func _on_deathtimer_timeout() -> void:
 	player.get_tree().reload_current_scene()
+
+
+func _on_meleetimer_timeout() -> void:
+	can_melee = true
+	meleee.can_attack = false
